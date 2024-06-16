@@ -1,4 +1,4 @@
-import Products from "../features/Products/Products"
+import Products from "../features/Products/components/Products.jsx"
 import Navbar from "../features/navbar/Navbar"
 
 const Home = () => {
