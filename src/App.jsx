@@ -6,39 +6,41 @@ import SignupPage from "./pages/SignupPage";
 import CartPage from "./pages/CartPage";
 import Checkout from "./pages/Checkout";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 const router = createBrowserRouter([
   {
     path: "/",
-    element:<Home/>
+    element: <Home />
   },
   {
     path: "/login",
-    element: <LoginPage/>,
+    element: <LoginPage />,
   },
   {
     path: "/Signup",
-    element: <SignupPage/>,
+    element: <SignupPage />,
   },
   {
     path: "/cart",
-    element: <CartPage/>,
+    element: <CartPage />,
   },
   {
     path: "/checkout",
-    element: <Checkout/>,
+    element: <Checkout />,
   },
   {
     path: "/product-details",
-    element: <ProductDetailsPage/>,
+    element: <ProductDetailsPage />,
   },
 ]);
 function App() {
 
   return (
     <>
-       <RouterProvider router={router} />
-
-
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
     </>
   )
 }

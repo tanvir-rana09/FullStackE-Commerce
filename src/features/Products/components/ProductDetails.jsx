@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { StarIcon } from '@heroicons/react/20/solid'
 import { Radio, RadioGroup } from '@headlessui/react'
+import { Link } from 'react-router-dom'
 
 const product = {
   name: 'Basic Tee 6-Pack',
   price: '$192',
-  href: '#',
+  to: '#',
   breadcrumbs: [
-    { id: 1, name: 'Men', href: '#' },
-    { id: 2, name: 'Clothing', href: '#' },
+    { id: 1, name: 'Men', to: '#' },
+    { id: 2, name: 'Clothing', to: '#' },
   ],
   images: [
     {
@@ -54,7 +55,7 @@ const product = {
   details:
     'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.',
 }
-const reviews = { href: '#', average: 4, totalCount: 117 }
+const reviews = { to: '#', average: 4, totalCount: 117 }
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -72,9 +73,9 @@ export default function ProductDetails() {
             {product.breadcrumbs.map((breadcrumb) => (
               <li key={breadcrumb.id}>
                 <div className="flex items-center">
-                  <a href={breadcrumb.href} className="mr-2 text-sm font-medium text-gray-900">
+                  <Link to={breadcrumb.to} className="mr-2 text-sm font-medium text-gray-900">
                     {breadcrumb.name}
-                  </a>
+                  </Link>
                   <svg
                     width={16}
                     height={20}
@@ -89,9 +90,9 @@ export default function ProductDetails() {
               </li>
             ))}
             <li className="text-sm">
-              <a href={product.href} aria-current="page" className="font-medium text-gray-500 hover:text-gray-600">
+              <Link to={product.to} aria-current="page" className="font-medium text-gray-500 hover:text-gray-600">
                 {product.name}
-              </a>
+              </Link>
             </li>
           </ol>
         </nav>
@@ -158,9 +159,9 @@ export default function ProductDetails() {
                   ))}
                 </div>
                 <p className="sr-only">{reviews.average} out of 5 stars</p>
-                <a href={reviews.href} className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                <Link to={reviews.to} className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
                   {reviews.totalCount} reviews
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -202,9 +203,9 @@ export default function ProductDetails() {
               <div className="mt-10">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-medium text-gray-900">Size</h3>
-                  <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                  <Link to="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
                     Size guide
-                  </a>
+                  </Link>
                 </div>
 
                 <fieldset aria-label="Choose a size" className="mt-4">
