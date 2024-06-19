@@ -989,4 +989,4 @@
         }
     ]
 
-new Set([...products.map(e=>console.log(e.category))]) 
+new Set([...products.map(e=>console.log({value:e.brand,label:e.brand,checked:false}))]) 

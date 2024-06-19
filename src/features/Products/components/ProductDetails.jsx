@@ -34,16 +34,6 @@ const product = {
     { name: 'Gray', class: 'bg-gray-200', selectedClass: 'ring-gray-400' },
     { name: 'Black', class: 'bg-gray-900', selectedClass: 'ring-gray-900' },
   ],
-  sizes: [
-    { name: 'XXS', inStock: false },
-    { name: 'XS', inStock: true },
-    { name: 'S', inStock: true },
-    { name: 'M', inStock: true },
-    { name: 'L', inStock: true },
-    { name: 'XL', inStock: true },
-    { name: '2XL', inStock: true },
-    { name: '3XL', inStock: true },
-  ],
   description:
     'The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.',
   highlights: [
@@ -63,7 +53,6 @@ function classNames(...classes) {
 
 export default function ProductDetails() {
   const [selectedColor, setSelectedColor] = useState(product.colors[0])
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2])
 
   return (
     <div className="bg-white">
@@ -193,71 +182,6 @@ export default function ProductDetails() {
                             'h-8 w-8 rounded-full border border-black border-opacity-10'
                           )}
                         />
-                      </Radio>
-                    ))}
-                  </RadioGroup>
-                </fieldset>
-              </div>
-
-              {/* Sizes */}
-              <div className="mt-10">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-gray-900">Size</h3>
-                  <Link to="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                    Size guide
-                  </Link>
-                </div>
-
-                <fieldset aria-label="Choose a size" className="mt-4">
-                  <RadioGroup
-                    value={selectedSize}
-                    onChange={setSelectedSize}
-                    className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4"
-                  >
-                    {product.sizes.map((size) => (
-                      <Radio
-                        key={size.name}
-                        value={size}
-                        disabled={!size.inStock}
-                        className={({ focus }) =>
-                          classNames(
-                            size.inStock
-                              ? 'cursor-pointer bg-white text-gray-900 shadow-sm'
-                              : 'cursor-not-allowed bg-gray-50 text-gray-200',
-                            focus ? 'ring-2 ring-indigo-500' : '',
-                            'group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6'
-                          )
-                        }
-                      >
-                        {({ checked, focus }) => (
-                          <>
-                            <span>{size.name}</span>
-                            {size.inStock ? (
-                              <span
-                                className={classNames(
-                                  checked ? 'border-indigo-500' : 'border-transparent',
-                                  focus ? 'border' : 'border-2',
-                                  'pointer-events-none absolute -inset-px rounded-md'
-                                )}
-                                aria-hidden="true"
-                              />
-                            ) : (
-                              <span
-                                aria-hidden="true"
-                                className="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-200"
-                              >
-                                <svg
-                                  className="absolute inset-0 h-full w-full stroke-2 text-gray-200"
-                                  viewBox="0 0 100 100"
-                                  preserveAspectRatio="none"
-                                  stroke="currentColor"
-                                >
-                                  <line x1={0} y1={100} x2={100} y2={0} vectorEffect="non-scaling-stroke" />
-                                </svg>
-                              </span>
-                            )}
-                          </>
-                        )}
                       </Radio>
                     ))}
                   </RadioGroup>

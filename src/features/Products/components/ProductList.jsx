@@ -4,45 +4,13 @@ import { fetchAllProductsAsync, selectAllProducts } from "../productsSlice";
 import { useEffect } from "react";
 
 const ProductList = () => {
-	const oldProducts = [
-		{
-			id: 1,
-			name: 'Basic Tee',
-			href: '#',
-			thumbnail: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-			imageAlt: "Front of men's Basic Tee in black.",
-			price: '$35',
-			color: 'Black',
-		},
-		{
-			id: 2,
-			name: 'Basic Tee',
-			href: '#',
-			thumbnail: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-			imageAlt: "Front of men's Basic Tee in black.",
-			price: '$35',
-			color: 'Black',
-		},
-		{
-			id: 3,
-			name: 'Basic Tee',
-			href: '#',
-			thumbnail: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-			imageAlt: "Front of men's Basic Tee in black.",
-			price: '$35',
-			color: 'Black',
-		},
-		// More ProductList...
-	];
-
-
+	
 	const products = useSelector(selectAllProducts)
 	const dispatch = useDispatch()
 	useEffect(()=>{
 		dispatch(fetchAllProductsAsync())
 	},[dispatch])
 
-	new Set([...products.map((e)=>console.log(e.category))])
 	return (
 
 		<div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 bg-white">
@@ -60,10 +28,10 @@ const ProductList = () => {
 							<div className="mt-4 flex justify-between">
 								<div>
 									<h3 className="text-sm text-gray-700">
-										<Link to={product.href}>
+										<p>
 											<span aria-hidden="true" className="absolute inset-0" />
 											{product.title}
-										</Link>
+										</p>
 									</h3>
 									<p className="mt-1 text-sm text-gray-500">{product.rating}</p>
 								</div>

@@ -16,60 +16,80 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
 import ProductList from './ProductList'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
-import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { fetchAllProductsAsyncByFilter } from '../productsSlice'
 
 const sortOptions = [
-	{ name: 'Most Popular', href: '#', current: true },
-	{ name: 'Best Rating', href: '#', current: false },
-	{ name: 'Newest', href: '#', current: false },
-	{ name: 'Price: Low to High', href: '#', current: false },
-	{ name: 'Price: High to Low', href: '#', current: false },
+	{ name: 'Top rated', sort: 'rating', order: 'desc', current: false },
+	{ name: 'Price: Low to High', sort: 'price', order: 'asc', current: false },
+	{ name: 'Price: High to Low', sort: 'price', order: 'desc', current: false },
 ]
 
 const filters = [
 	{
-		id: 'color',
-		name: 'Color',
+		id: 'brands',
+		name: 'Brands',
 		options: [
-			{ value: 'white', label: 'White', checked: false },
-			{ value: 'beige', label: 'Beige', checked: false },
-			{ value: 'blue', label: 'Blue', checked: true },
-			{ value: 'brown', label: 'Brown', checked: false },
-			{ value: 'green', label: 'Green', checked: false },
-			{ value: 'purple', label: 'Purple', checked: false },
+			{ value: 'Essence', label: 'Essence', checked: false },
+			{ value: 'Glamour-Beauty', label: 'Glamour Beauty', checked: false },
+			{ value: 'Velvet-Touch', label: 'Velvet Touch', checked: false },
+			{ value: 'Chic-Cosmetics', label: 'Chic Cosmetics', checked: false },
+			{ value: 'Nail-Couture', label: 'Nail Couture', checked: false },
+			{ value: 'Calvin-Klein', label: 'Calvin Klein', checked: false },
+			{ value: 'Chanel', label: 'Chanel', checked: false },
+			{ value: 'Dior', label: 'Dior', checked: false },
+			{ value: 'Dolce-&-Gabbana', label: 'Dolce & Gabbana', checked: false },
+			{ value: 'Gucci', label: 'Gucci', checked: false },
+			{
+				value: 'Annibale Colombo',
+				label: 'Annibale Colombo',
+				checked: false
+			},
+			{
+				value: 'Annibale Colombo',
+				label: 'Annibale Colombo',
+				checked: false
+			},
+			{ value: 'Furniture Co.', label: 'Furniture Co.', checked: false },
+			{ value: 'Knoll', label: 'Knoll', checked: false },
+			{ value: 'Bath Trends', label: 'Bath Trends', checked: false },
 		],
 	},
 	{
 		id: 'category',
 		name: 'Category',
 		options: [
-			{ value: 'new-arrivals', label: 'New Arrivals', checked: false },
-			{ value: 'sale', label: 'Sale', checked: false },
-			{ value: 'travel', label: 'Travel', checked: true },
-			{ value: 'organization', label: 'Organization', checked: false },
-			{ value: 'accessories', label: 'Accessories', checked: false },
+			{ value: 'beauty', label: 'beauty', checked: false },
+			{ value: 'fragrances', label: 'fragrances', checked: false },
+			{ value: 'furniture', label: 'furniture', checked: false },
+			{ value: 'groceries', label: 'groceries', checked: false },
 		],
 	},
-	{
-		id: 'size',
-		name: 'Size',
-		options: [
-			{ value: '2l', label: '2L', checked: false },
-			{ value: '6l', label: '6L', checked: false },
-			{ value: '12l', label: '12L', checked: false },
-			{ value: '18l', label: '18L', checked: false },
-			{ value: '20l', label: '20L', checked: false },
-			{ value: '40l', label: '40L', checked: true },
-		],
-	},
+
 ]
 
 function classNames(...classes) {
 	return classes.filter(Boolean).join(' ')
 }
 
+
 const Products = () => {
 	const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+	const dispatch = useDispatch()
+	const [filter, setFilter] = useState({})
+	const filterHandle = (e, section, option) => {
+		let newFilter = { ...filter, [section.id]: option.value }
+		setFilter(newFilter)
+		dispatch(fetchAllProductsAsyncByFilter(newFilter))
+	}
+	const handleSort = (e, option) => {
+		console.log(option);
+		let newFilter = { ...filter, _sort: option.sort, _order: option.order }
+		setFilter(newFilter)
+		dispatch(fetchAllProductsAsyncByFilter(newFilter))
+	}
+
+
 	return (
 		<div className="bg-white">
 			<div>
@@ -113,7 +133,7 @@ const Products = () => {
 									<form className="mt-4 border-t border-gray-200">
 										<h3 className="sr-only">Categories</h3>
 
-										{filters.map((section,i) => (
+										{filters.map((section, i) => (
 											<Disclosure as="div" key={i} className="border-t border-gray-200 px-4 py-6">
 												{({ open }) => (
 													<>
@@ -139,6 +159,7 @@ const Products = () => {
 																			defaultValue={option.value}
 																			type="checkbox"
 																			defaultChecked={option.checked}
+																			onChange={(e) => filterHandle(e, section, option)}
 																			className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
 																		/>
 																		<label
@@ -188,19 +209,19 @@ const Products = () => {
 								>
 									<MenuItems className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
 										<div className="py-1">
-											{sortOptions.map((option,i) => (
+											{sortOptions.map((option, i) => (
 												<MenuItem key={i}>
 													{({ focus }) => (
-														<Link
-															to={option.href}
+														<p
+															onClick={(e) => handleSort(e, option)}
 															className={classNames(
 																option.current ? 'font-medium text-gray-900' : 'text-gray-500',
 																focus ? 'bg-gray-100' : '',
-																'block px-4 py-2 text-sm'
+																'block px-4 py-2 text-sm cursor-pointer'
 															)}
 														>
 															{option.name}
-														</Link>
+														</p>
 													)}
 												</MenuItem>
 											))}
@@ -235,7 +256,7 @@ const Products = () => {
 								<h3 className="sr-only">Categories</h3>
 
 
-								{filters.map((section,i) => (
+								{filters.map((section, i) => (
 									<Disclosure as="div" key={i} className="border-b border-gray-200 py-6">
 										{({ open }) => (
 											<>
@@ -260,6 +281,7 @@ const Products = () => {
 																	name={`${section.id}[]`}
 																	defaultValue={option.value}
 																	type="checkbox"
+																	onChange={(e) => filterHandle(e, section, option)}
 																	defaultChecked={option.checked}
 																	className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
 																/>
@@ -287,18 +309,18 @@ const Products = () => {
 			</div>
 			<div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
 				<div className="flex flex-1 justify-between sm:hidden">
-					<Link
-						to="#"
+					<div
+
 						className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
 					>
 						Previous
-					</Link>
-					<Link
-						to="#"
+					</div>
+					<div
+
 						className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
 					>
 						Next
-					</Link>
+					</div>
 				</div>
 				<div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
 					<div>
@@ -309,34 +331,32 @@ const Products = () => {
 					</div>
 					<div>
 						<nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-							<Link
-								to="#"
+							<div
+
 								className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							>
 								<span className="sr-only">Previous</span>
 								<ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-							</Link>
+							</div>
 							{/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
-							<Link
-								to="#"
+							<div
+
 								aria-current="page"
 								className="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 							>
 								1
-							</Link>
-							<Link
-								to="#"
+							</div>
+							<div
 								className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							>
 								2
-							</Link>
-							<Link
-								to="#"
+							</div>
+							<div
 								className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							>
 								<span className="sr-only">Next</span>
 								<ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-							</Link>
+							</div>
 						</nav>
 					</div>
 				</div>
