@@ -1,16 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchAllProductsAsync, selectAllProducts } from "../productsSlice";
-import { useEffect } from "react";
 
-const ProductList = () => {
+const ProductList = ({products}) => {
 	
-	const products = useSelector(selectAllProducts)
-	const dispatch = useDispatch()
-	useEffect(()=>{
-		dispatch(fetchAllProductsAsync())
-	},[dispatch])
-
 	return (
 
 		<div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 bg-white">

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
 	Dialog,
 	DialogPanel,
@@ -16,8 +16,8 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
 import ProductList from './ProductList'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
-import { useDispatch } from 'react-redux'
-import { fetchAllProductsAsyncByFilter } from '../productsSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchAllProductsAsyncByFilter, selectAllProducts } from '../productsSlice'
 
 const sortOptions = [
 	{ name: 'Top rated', sort: 'rating', order: 'desc', current: false },
@@ -75,20 +75,49 @@ function classNames(...classes) {
 
 const Products = () => {
 	const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-	const dispatch = useDispatch()
 	const [filter, setFilter] = useState({})
+	const [sort, seSort] = useState({})
+	const dispatch = useDispatch()
+	const products = useSelector(selectAllProducts)
+	const [page, setPage] = useState(1)
+	const ITEM_PER_PAGE = 10
+
+	useEffect(() => {
+		// dispatch(fetchAllProductsAsync())
+	}, [dispatch])
+
 	const filterHandle = (e, section, option) => {
-		let newFilter = { ...filter, [section.id]: option.value }
+		const newFilter = { ...filter }
+		console.log(newFilter);
+		if (e.target.checked) {
+			if (newFilter[section.id]) {
+				newFilter[section.id].push(option.value)
+			} else {
+				newFilter[section.id] = [option.value]
+			}
+		} else {
+			const index = newFilter[section.id].findIndex(el => el === option.value)
+			console.log(index);
+			newFilter[section.id].splice(index, 1)
+		}
 		setFilter(newFilter)
-		dispatch(fetchAllProductsAsyncByFilter(newFilter))
-	}
-	const handleSort = (e, option) => {
-		console.log(option);
-		let newFilter = { ...filter, _sort: option.sort, _order: option.order }
-		setFilter(newFilter)
-		dispatch(fetchAllProductsAsyncByFilter(newFilter))
+
 	}
 
+	const handleSort = (e, option) => {
+		let sort = { _sort: option.sort, _order: option.order }
+		seSort(sort)
+	}
+	const handlePage = (e, page) => {
+		setPage(page)
+	}
+
+	useEffect(() => {
+		const pagination = { _page: page, _limit: ITEM_PER_PAGE }
+		dispatch(fetchAllProductsAsyncByFilter({ filter, sort, pagination }))
+		
+
+	}, [filter, dispatch, sort,page])
 
 	return (
 		<div className="bg-white">
@@ -302,7 +331,7 @@ const Products = () => {
 							</form>
 
 							{/* Product grid */}
-							<div className="lg:col-span-3"><ProductList /></div>
+							<div className="lg:col-span-3"><ProductList products={products} /></div>
 						</div>
 					</section>
 				</main>
@@ -325,8 +354,8 @@ const Products = () => {
 				<div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
 					<div>
 						<p className="text-sm text-gray-700">
-							Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}
-							<span className="font-medium">97</span> results
+							Showing <span className="font-medium">{(page -1) * ITEM_PER_PAGE+1 }</span> to <span className="font-medium">{page*ITEM_PER_PAGE}</span> of{' '}
+							<span className="font-medium">{30}</span> results
 						</p>
 					</div>
 					<div>
@@ -338,21 +367,21 @@ const Products = () => {
 								<span className="sr-only">Previous</span>
 								<ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
 							</div>
-							{/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
-							<div
+							{
+								Array.from(Array(3), ((el, i) => (
+									<div
+										key={i}
+										onClick={(e) => handlePage(e, i + 1)}
+										aria-current="page"
+										className={`relative cursor-pointer z-10 inline-flex items-center ${i+1 === page ? ' bg-indigo-600 text-white' : 'text-gray-400'} px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+									>
+										{i + 1}
+									</div>
+								)))
+							}
 
-								aria-current="page"
-								className="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-							>
-								1
-							</div>
 							<div
-								className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-							>
-								2
-							</div>
-							<div
-								className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+								className="relative inline-flex items-center rounded-r-md px-2 py-2 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							>
 								<span className="sr-only">Next</span>
 								<ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
@@ -361,7 +390,6 @@ const Products = () => {
 					</div>
 				</div>
 			</div>
-
 		</div>
 	)
 }

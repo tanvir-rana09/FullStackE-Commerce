@@ -5,17 +5,27 @@ export function fetchAllProducts() {
         resolve({ data });
     });
 }
-export function fetchProductsByFilter(filter) {
-    console.log(filter);
+export function fetchProductsByFilter(filter,sort,pagination) {
     let newFilter = "";
     for (let key in filter) {
-        newFilter += `${key}=${filter[key]}&`;
+        const categoryValue = filter[key]
+        if (categoryValue.length) {
+            const lastCategoryValue = categoryValue[categoryValue.length-1]
+            newFilter += `${key}=${lastCategoryValue}&`;
+        }
     }
+
+    for (const key in sort) {
+        newFilter += `${key}=${sort[key]}&`;
+    }
+    for (const key in pagination) {
+        newFilter += `${key}=${pagination[key]}&`;
+    }
+    
 
     return new Promise(async (resolve) => {
         const response = await fetch(
             `http://localhost:3000/products?${newFilter}`
-            // "https://dummyjson.com/products/" + newFilter
         );
         const data = await response.json();
         resolve({ data });

@@ -6,18 +6,18 @@ const initialState = {
   status: 'idle',
 };
 
-export const fetchAllProductsAsync = createAsyncThunk(
-  'products/fetchAllProducts',
-  async () => {
-    const response = await fetchAllProducts();
-    // The value we return becomes the `fulfilled` action payload
-    return response.data;
-  }
-);
+// export const fetchAllProductsAsync = createAsyncThunk(
+//   'products/fetchAllProducts',
+//   async () => {
+//     const response = await fetchAllProducts();
+//     // The value we return becomes the `fulfilled` action payload
+//     return response.data;
+//   }
+// );
 export const fetchAllProductsAsyncByFilter = createAsyncThunk(
   'products/fetchAllProductsAsyncByFilter',
-  async (filter) => {
-    const response = await fetchProductsByFilter(filter);
+  async ({filter,sort,pagination}) => {
+    const response = await fetchProductsByFilter(filter,sort,pagination);
     // The value we return becomes the `fulfilled` action payload
     return response.data;
   }
@@ -33,13 +33,13 @@ export const productsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllProductsAsync.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchAllProductsAsync.fulfilled, (state, action) => {
-        state.status = 'idle';
-        state.products = action.payload;
-      })
+      // .addCase(fetchAllProductsAsync.pending, (state) => {
+      //   state.status = 'loading';
+      // })
+      // .addCase(fetchAllProductsAsync.fulfilled, (state, action) => {
+      //   state.status = 'idle';
+      //   state.products = action.payload;
+      // })
       .addCase(fetchAllProductsAsyncByFilter.pending, (state) => {
         state.status = 'loading';
       })
