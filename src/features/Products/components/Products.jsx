@@ -17,7 +17,7 @@ import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from
 import ProductList from './ProductList'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchAllProductsAsyncByFilter, selectAllProducts } from '../productsSlice'
+import { fetchAllBrandsAsync, fetchAllCategoriesAsync, fetchAllProductsAsyncByFilter, selectAllProducts, selectAllbrands, selectAllcategories } from '../productsSlice'
 
 const sortOptions = [
 	{ name: 'Top rated', sort: 'rating', order: 'desc', current: false },
@@ -25,48 +25,7 @@ const sortOptions = [
 	{ name: 'Price: High to Low', sort: 'price', order: 'desc', current: false },
 ]
 
-const filters = [
-	{
-		id: 'brands',
-		name: 'Brands',
-		options: [
-			{ value: 'Essence', label: 'Essence', checked: false },
-			{ value: 'Glamour-Beauty', label: 'Glamour Beauty', checked: false },
-			{ value: 'Velvet-Touch', label: 'Velvet Touch', checked: false },
-			{ value: 'Chic-Cosmetics', label: 'Chic Cosmetics', checked: false },
-			{ value: 'Nail-Couture', label: 'Nail Couture', checked: false },
-			{ value: 'Calvin-Klein', label: 'Calvin Klein', checked: false },
-			{ value: 'Chanel', label: 'Chanel', checked: false },
-			{ value: 'Dior', label: 'Dior', checked: false },
-			{ value: 'Dolce-&-Gabbana', label: 'Dolce & Gabbana', checked: false },
-			{ value: 'Gucci', label: 'Gucci', checked: false },
-			{
-				value: 'Annibale Colombo',
-				label: 'Annibale Colombo',
-				checked: false
-			},
-			{
-				value: 'Annibale Colombo',
-				label: 'Annibale Colombo',
-				checked: false
-			},
-			{ value: 'Furniture Co.', label: 'Furniture Co.', checked: false },
-			{ value: 'Knoll', label: 'Knoll', checked: false },
-			{ value: 'Bath Trends', label: 'Bath Trends', checked: false },
-		],
-	},
-	{
-		id: 'category',
-		name: 'Category',
-		options: [
-			{ value: 'beauty', label: 'beauty', checked: false },
-			{ value: 'fragrances', label: 'fragrances', checked: false },
-			{ value: 'furniture', label: 'furniture', checked: false },
-			{ value: 'groceries', label: 'groceries', checked: false },
-		],
-	},
 
-]
 
 function classNames(...classes) {
 	return classes.filter(Boolean).join(' ')
@@ -79,8 +38,27 @@ const Products = () => {
 	const [sort, seSort] = useState({})
 	const dispatch = useDispatch()
 	const products = useSelector(selectAllProducts)
+	const categories = useSelector(selectAllcategories)
+	const brands = useSelector(selectAllbrands)
 	const [page, setPage] = useState(1)
 	const ITEM_PER_PAGE = 10
+
+
+
+	const filters = [
+		{
+			id: 'brands',
+			name: 'Brands',
+			options: brands
+		},
+		{
+			id: 'category',
+			name: 'Category',
+			options: categories
+		},
+	
+	]
+
 
 	useEffect(() => {
 		// dispatch(fetchAllProductsAsync())
@@ -115,9 +93,13 @@ const Products = () => {
 	useEffect(() => {
 		const pagination = { _page: page, _limit: ITEM_PER_PAGE }
 		dispatch(fetchAllProductsAsyncByFilter({ filter, sort, pagination }))
-		
-
 	}, [filter, dispatch, sort,page])
+
+
+	useEffect(()=>{
+		dispatch(fetchAllCategoriesAsync())
+		dispatch(fetchAllBrandsAsync())
+	},[dispatch])
 
 	return (
 		<div className="bg-white">

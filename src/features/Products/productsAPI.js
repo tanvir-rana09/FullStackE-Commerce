@@ -5,6 +5,20 @@ export function fetchAllProducts() {
         resolve({ data });
     });
 }
+export function fetchAllcategories() {
+    return new Promise(async (resolve) => {
+        const response = await fetch("http://localhost:3000/categories");
+        const data = await response.json();
+        resolve({ data });
+    });
+}
+export function fetchAllBrands() {
+    return new Promise(async (resolve) => {
+        const response = await fetch("http://localhost:3000/brands");
+        const data = await response.json();
+        resolve({ data });
+    });
+}
 export function fetchProductsByFilter(filter,sort,pagination) {
     let newFilter = "";
     for (let key in filter) {
