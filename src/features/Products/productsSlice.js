@@ -68,9 +68,7 @@ export const productsSlice = createSlice({
 });
 
 export const { increment } = productsSlice.actions;
-
 export const selectAllProducts = (state) => state.product.products;
 export const selectAllcategories = (state) => state.product.categories;
 export const selectAllbrands = (state) => state.product.brands;
-
 export default productsSlice.reducer;
